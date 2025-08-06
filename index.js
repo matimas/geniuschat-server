@@ -4,6 +4,7 @@ const app = express();
 
 require("dotenv").config();
 const mongoose = require('mongoose');
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -19,7 +20,6 @@ const chatRoutes = require("./routes/chat"); // הנתיב היחסי
 
 const routes = require("./routes");
 
-app.use(cors());
 app.use("/api", chatRoutes);
 
 
