@@ -3,10 +3,10 @@ const cors = require("cors");
 const app = express();
 
 require("dotenv").config();
-const mongoose = require('mongoose');
-
+require("./database/dbconnection");
 
 /* ☑️ CORS – הרשאות */
+
 const allowedOrigins = [
   "http://localhost:3000",
   "https://geniuschat-client.netlify.app"
@@ -20,24 +20,19 @@ app.use(
   })
 );
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log("📦 התחברת למונגוDB");
-}).catch(err => {
-  console.error("❌ שגיאה בהתחברות ל־MongoDB:", err);
-});
 
 app.use(express.json());
 
-const chatRoutes = require("./routes/chat"); // הנתיב היחסי
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
 
-const routes = require("./routes");
-
+const chatRoutes = require("./routes/chat"); 
 app.use("/api", chatRoutes);
 
+const routes = require("./routes");
 app.use("/api", routes);
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

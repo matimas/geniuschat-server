@@ -1,21 +1,28 @@
-// routes/chat.js
 const express = require("express");
 const router  = express.Router();
-const Conversation = require("../models/Conversation"); // מודל מונגו
+const Conversation = require("../models/Conversation");
+const auth = require("../middleware/auth");
 
-// ➊ GET /api/conversations  → מחזיר רשימת שיחות (id+persona+תאריך)
-router.get("/conversations", async (_req, res) => {
+/* ➊ רשימת שיחות של המשתמש המחובר */
+router.get("/conversations", auth, async (req, res) => {
   const list = await Conversation
-    .find({}, "persona createdAt")   // שולף רק שני שדות
-    .sort({ createdAt: -1 })         // מסדר מהכי חדש
-    .lean();                         // מחזיר אובייקטים פשוטים
+    .find({ userId: req.user }, "persona createdAt")
+    .sort({ createdAt: -1 })
+    .lean();
+
   res.json(list);
 });
 
-// ➋ GET /api/conversations/:id  → מחזיר שיחה מלאה לפי ID
-router.get("/conversations/:id", async (req, res) => {
-  const conv = await Conversation.findById(req.params.id).lean();
+/* ➋ שיחה מלאה (רק אם שייכת למשתמש) */
+router.get("/conversations/:id", auth, async (req, res) => {
+  const conv = await Conversation.findOne({
+    _id: req.params.id,
+    userId: req.user,
+  }).lean();
+
+  if (!conv) return res.status(404).json({ msg: "לא נמצא" });
   res.json(conv);
 });
 
 module.exports = router;
+

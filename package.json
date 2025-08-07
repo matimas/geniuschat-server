@@ -4,29 +4,26 @@
   "description": "Express + MongoDB + OpenAI backend for GeniusChat",
   "main": "index.js",
   "type": "commonjs",
-
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",      
+    "dev": "nodemon index.js",
     "test": "echo \"no tests yet\" && exit 0"
   },
-
   "engines": {
     "node": ">=20"
   },
-
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
     "openai": "^5.11.0"
   },
-
   "devDependencies": {
     "nodemon": "^3.0.4"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC"
